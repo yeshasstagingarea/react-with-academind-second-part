@@ -6,12 +6,24 @@ function AllMeetupPage(){
     const [isLoading,setIsLoading] = useState(false);
     const [loadedMeetups,setLoadedMeetups] = useState([]);
 
-    fetch('https://react-with-academind-8d7c6-default-rtdb.firebaseio.com/meetups.json').
-    then((response)=> {return (response.json)}).
-    then((data)=>{
+    useEffect(()=>{
         setIsLoading(true);
-        setLoadedMeetups(data);
-    });
+        fetch('https://react-with-academind-8d7c6-default-rtdb.firebaseio.com/meetups.json').
+        then((response)=> {return response.json();}).
+        then((data)=>{
+            const meetups = [];
+            for(var key in data){
+                const meetup = {
+                    id:key,
+                    ...data[key]
+                }
+                meetups.push(meetup);
+            }
+            setIsLoading(false);
+            setLoadedMeetups(meetups);
+        });
+        },[]);
+
 
     if(isLoading){
         return (
